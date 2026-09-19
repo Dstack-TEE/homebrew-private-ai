@@ -63,7 +63,7 @@ jobs:
               --base main \
               --head "$BRANCH" \
               --title "private-ai-proxy $VERSION" \
-              --body "Update the Formula and Cask from the immutable desktop-v$VERSION release and its published SHA256SUMS."
+              --body "Update the Formula and Cask from the versioned desktop-v$VERSION release and its published SHA256SUMS."
           fi
       - name: Run validation for the update
         if: steps.commit.outputs.updated == 'true'
