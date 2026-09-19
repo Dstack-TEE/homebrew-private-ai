@@ -48,12 +48,12 @@ jobs:
         run: |
           expected=$(sed -n 's/^  version "\([^"]*\)"/\1/p' "$REPOSITORY_PATH/Formula/private-ai-proxy.rb")
           test -n "$expected"
-          brew install "$TAP_NAME/private-ai-proxy"
+          brew install --formula "$TAP_NAME/private-ai-proxy"
           test "$(pap --version)" = "private-ai-proxy $expected"
           test "$(private-ai-proxy --version)" = "private-ai-proxy $expected"
           test "$(aci --version)" = "private-ai-proxy $expected"
-          brew test "$TAP_NAME/private-ai-proxy"
-          brew uninstall "$TAP_NAME/private-ai-proxy"
+          brew test --formula "$TAP_NAME/private-ai-proxy"
+          brew uninstall --formula "$TAP_NAME/private-ai-proxy"
 
   cask:
     strategy:

@@ -11,7 +11,6 @@ cask "private-ai-proxy" do
   homepage "https://redpill.ai/private-ai-gateway"
 
   auto_updates true
-
   depends_on :macos
 
   app "Private AI Proxy.app"
