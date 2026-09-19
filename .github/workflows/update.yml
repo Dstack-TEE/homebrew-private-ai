@@ -47,7 +47,7 @@ jobs:
             git push --set-upstream origin "$BRANCH"
             echo "updated=true" >> "$GITHUB_OUTPUT"
           fi
-          if [ "$(git rev-list --count origin/main..HEAD)" -gt 0 ]; then
+          if ! git diff --quiet origin/main HEAD -- Formula/private-ai-proxy.rb Casks/private-ai-proxy.rb; then
             echo "pr=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Open the update pull request
