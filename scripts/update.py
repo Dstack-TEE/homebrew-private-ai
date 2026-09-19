@@ -128,6 +128,8 @@ def cask(version: str, checksums: dict[str, str]) -> str:
 
   auto_updates true
 
+  depends_on :macos
+
   app "Private AI Proxy.app"
 end
 '''
