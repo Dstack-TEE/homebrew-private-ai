@@ -1,26 +1,26 @@
 class PrivateAiProxy < Formula
   desc "Local proxy and CLI for Attested Confidential Inference"
   homepage "https://github.com/Dstack-TEE/private-ai-gateway"
-  version "0.1.3"
+  version "0.1.4"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.3/private-ai-proxy-cli-0.1.3-macos-arm64.tar.gz"
-      sha256 "35c02fa914f4313da93f70c4560a5b0d43f8944d08021bd5ecf0db8ae20e91ea"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.4/private-ai-proxy-cli-0.1.4-macos-arm64.tar.gz"
+      sha256 "13422af40503542e0f955412b7c146ae6a2a1785f49d825b98f69c8c977de6fd"
     else
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.3/private-ai-proxy-cli-0.1.3-macos-x64.tar.gz"
-      sha256 "bb7fbd9ab59287e8459d4ea5d00f473eab793baab4c7554d7582d60ed6a8ac95"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.4/private-ai-proxy-cli-0.1.4-macos-x64.tar.gz"
+      sha256 "0950fbea5cd117a88253427df489d31cdf40bc5adba6936d76781fcbc81bfc74"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.3/private-ai-proxy-cli-0.1.3-linux-arm64.tar.gz"
-      sha256 "0cafba40ac0775283e0c1c70447a63667c52bf0a437c85f98e1a6d366f2e1ff1"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.4/private-ai-proxy-cli-0.1.4-linux-arm64.tar.gz"
+      sha256 "9d1b41c09d00808efa8d00d08ecb10fd06afb326eece8c9fd79861e6e0c95821"
     else
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.3/private-ai-proxy-cli-0.1.3-linux-x64.tar.gz"
-      sha256 "c84e41ee43e3b1a0a5f6fef4131fbd4cf5f0f515a18812dbed7f8a2057d70903"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.1.4/private-ai-proxy-cli-0.1.4-linux-x64.tar.gz"
+      sha256 "463e6813e5a96ee5fae334c4661c83067b0b86afd3d83de15e6900572fd7ca58"
     end
   end
 
