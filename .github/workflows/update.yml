@@ -1,0 +1,72 @@
+name: Update stable release
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Read the stable version
+        id: release
+        run: echo "version=$(python3 scripts/update.py --print-version)" >> "$GITHUB_OUTPUT"
+      - name: Switch to the release branch
+        env:
+          BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
+        run: |
+          if git ls-remote --exit-code --heads origin "refs/heads/$BRANCH" >/dev/null; then
+            git fetch origin "$BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
+      - name: Generate Formula and Cask
+        run: python3 scripts/update.py
+      - name: Commit an update
+        id: commit
+        env:
+          BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if ! git diff --quiet -- Formula/private-ai-proxy.rb Casks/private-ai-proxy.rb; then
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add Formula/private-ai-proxy.rb Casks/private-ai-proxy.rb
+            git commit -m "private-ai-proxy $VERSION"
+            git push --set-upstream origin "$BRANCH"
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+          fi
+          if [ "$(git rev-list --count origin/main..HEAD)" -gt 0 ]; then
+            echo "pr=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Open the update pull request
+        if: steps.commit.outputs.pr == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          number=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -z "$number" ]; then
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "private-ai-proxy $VERSION" \
+              --body "Update the Formula and Cask from the immutable desktop-v$VERSION release and its published SHA256SUMS."
+          fi
+      - name: Run validation for the update
+        if: steps.commit.outputs.updated == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
+        run: gh workflow run test.yml --ref "$BRANCH"
