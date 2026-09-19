@@ -52,7 +52,7 @@ jobs:
           test "$(pap --version)" = "private-ai-proxy $expected"
           test "$(private-ai-proxy --version)" = "private-ai-proxy $expected"
           test "$(aci --version)" = "private-ai-proxy $expected"
-          brew test --formula "$TAP_NAME/private-ai-proxy"
+          brew test "$TAP_NAME/private-ai-proxy"
           brew uninstall --formula "$TAP_NAME/private-ai-proxy"
 
   cask:
