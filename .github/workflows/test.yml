@@ -1,0 +1,78 @@
+name: Homebrew
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  style:
+    runs-on: macos-26
+    steps:
+      - name: Set up Homebrew
+        id: brew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c # 2026.07.10.1
+      - name: Check style and audit
+        env:
+          REPOSITORY_PATH: ${{ steps.brew.outputs.repository-path }}
+          TAP_NAME: dstack-tee/private-ai
+        run: |
+          brew style "$REPOSITORY_PATH/Formula/private-ai-proxy.rb" "$REPOSITORY_PATH/Casks/private-ai-proxy.rb"
+          brew audit --strict --formula "$TAP_NAME/private-ai-proxy"
+          brew audit --strict --cask "$TAP_NAME/private-ai-proxy"
+
+  formula:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-26
+          - macos-26-intel
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Set up Homebrew
+        id: brew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c # 2026.07.10.1
+      - name: Install and test the CLI
+        env:
+          REPOSITORY_PATH: ${{ steps.brew.outputs.repository-path }}
+          TAP_NAME: dstack-tee/private-ai
+        run: |
+          expected=$(sed -n 's/^  version "\([^"]*\)"/\1/p' "$REPOSITORY_PATH/Formula/private-ai-proxy.rb")
+          test -n "$expected"
+          brew install --formula "$TAP_NAME/private-ai-proxy"
+          test "$(pap --version)" = "private-ai-proxy $expected"
+          test "$(private-ai-proxy --version)" = "private-ai-proxy $expected"
+          test "$(aci --version)" = "private-ai-proxy $expected"
+          brew test "$TAP_NAME/private-ai-proxy"
+          brew uninstall --formula "$TAP_NAME/private-ai-proxy"
+
+  cask:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-26
+          - macos-26-intel
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Set up Homebrew
+        id: brew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c # 2026.07.10.1
+      - name: Install the desktop application
+        env:
+          TAP_NAME: dstack-tee/private-ai
+        run: |
+          brew install --cask "$TAP_NAME/private-ai-proxy"
+          brew list --cask "$TAP_NAME/private-ai-proxy"
+          test -d "/Applications/Private AI Proxy.app"
+          brew uninstall --cask "$TAP_NAME/private-ai-proxy"
