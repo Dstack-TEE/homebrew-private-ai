@@ -6,17 +6,26 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   update:
     runs-on: ubuntu-24.04
     steps:
+      # Events created with GITHUB_TOKEN start no workflows, so an update PR
+      # opened with it never ran the tests. A GitHub App token lets the push
+      # and the pull request run test.yml.
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ vars.DESKTOP_RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.DESKTOP_RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
           persist-credentials: true
       - name: Read the stable version
         id: release
@@ -53,7 +62,7 @@ jobs:
       - name: Open the update pull request
         if: steps.commit.outputs.pr == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
@@ -65,9 +74,3 @@ jobs:
               --title "private-ai-proxy $VERSION" \
               --body "Update the Formula and Cask from the versioned desktop-v$VERSION release and its published SHA256SUMS."
           fi
-      - name: Run validation for the update
-        if: steps.commit.outputs.updated == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BRANCH: automation/private-ai-proxy-${{ steps.release.outputs.version }}
-        run: gh workflow run test.yml --ref "$BRANCH"
