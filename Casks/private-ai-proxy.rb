@@ -1,9 +1,9 @@
 cask "private-ai-proxy" do
   arch arm: "arm64", intel: "x64"
 
-  version "0.6.2"
-  sha256 arm:   "6af7cd1435e0791939bdeddd37d20c295e125c799b5a2c21fc54c14cbaf310e6",
-         intel: "c7694ec852480adb236165dd92e478cf3443b49e1b2d82d9c057b2f3dad7b005"
+  version "0.7.0"
+  sha256 arm:   "851934d21357da4fcd3f7d2638216d13eb1a7bd2bc7889d3b72979fc024c3fa8",
+         intel: "87f2d0e77c6e7912e421dd7d8834fff0fbdbe1da5a56cf61ada51417447b7d8a"
 
   url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v#{version}/private-ai-proxy-#{version}-macos-#{arch}.dmg"
   name "Private AI Proxy"
