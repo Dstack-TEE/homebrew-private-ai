@@ -1,26 +1,26 @@
 class PrivateAiProxy < Formula
   desc "Local proxy and CLI for Attested Confidential Inference"
   homepage "https://github.com/Dstack-TEE/private-ai-gateway"
-  version "0.10.0"
+  version "0.11.1"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.10.0/private-ai-proxy-cli-0.10.0-macos-arm64.tar.gz"
-      sha256 "539be7497b3305b0f3a29206030d9bdb97cc7bad6cc28c5e06decbc6748e0f3b"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.11.1/private-ai-proxy-cli-0.11.1-macos-arm64.tar.gz"
+      sha256 "89e2e3b956dde7ca7c8b1fe3adaffc21c654ec90d2c6e00145ab7f605cbf3958"
     else
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.10.0/private-ai-proxy-cli-0.10.0-macos-x64.tar.gz"
-      sha256 "e78b14430b7c635e2f1c75e3492c83d0648ca45da03647d086a226faf7eda23a"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.11.1/private-ai-proxy-cli-0.11.1-macos-x64.tar.gz"
+      sha256 "a5d2eb743bfaecce2c8632549853c1bf37ac4b65496b5b7d5d0408ae3b318eb5"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.10.0/private-ai-proxy-cli-0.10.0-linux-arm64.tar.gz"
-      sha256 "52127ac1aa68b7226671b5f41d0f10ce84e95a51960c8087133e97d57c512af6"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.11.1/private-ai-proxy-cli-0.11.1-linux-arm64.tar.gz"
+      sha256 "bce5fbcbc16d0126a12f33ddd4915455c9dd0176df13f37cac459fd1fc65677c"
     else
-      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.10.0/private-ai-proxy-cli-0.10.0-linux-x64.tar.gz"
-      sha256 "effd40a051ea55b1593043d0d0ab3182b8a2eb2bddc8682f9129de935d41a47e"
+      url "https://github.com/Dstack-TEE/private-ai-gateway/releases/download/desktop-v0.11.1/private-ai-proxy-cli-0.11.1-linux-x64.tar.gz"
+      sha256 "f0fcccf5d3c113760da2660f11dc7d738fd4eeb546e34a243a56f77230bc850a"
     end
   end
 
